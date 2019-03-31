@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 def execute():
-    input_img_path = "Img/img2.png"
-    target_img_path = "Img/t1-img2.png"
+    input_img_path = "Img/img1.png"
+    target_img_path = "Img/t1-img1.png"
     threshold = 0.1
 
     input_img = cv2.imread(input_img_path)
@@ -27,6 +27,7 @@ def execute():
 
     # calculates the matchin map
 
+    match = []
     pixel_min = 0
 
     for i in range(0, Mrows):
@@ -40,13 +41,30 @@ def execute():
             if matching_img[i, j] < threshold:
                 #detects when the value is less than the threshold (found taret image)
                 print("patata")
+                match = [0]
+                pix_min_x = j * 2
+                pix_min_y = i * 2
+                pix_max_x = (j + Tcols) * 2
+                pix_max_y = (i + Trows) * 2
+                cv2.rectangle(input_img, (pix_min_x, pix_min_y), (pix_max_x, pix_max_y), (0, 255, 0), 2, 8)
             pixel_min = 0
 
     matching_img = cv2.resize(matching_img, (0, 0), fx=2, fy=2);
 
+    imgFound = np.zeros((40, 245, 3), np.uint8)
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+    if match == [0]:
+        cv2.putText(imgFound, "TARGET FOUND", (5, 30), font, 0.75, (0, 255, 0), 2)
+
+    else:
+        cv2.putText(imgFound, "TARGET NOT FOUND", (5, 30), font, 0.75, (0, 0, 255), 1)
+
     cv2.imshow("Input image", np.uint8(input_img))
     cv2.imshow("Matching image", np.uint8(matching_img))
     cv2.imshow("Target image", np.uint8(target_img))
+    cv2.imshow("Result", np.uint8(imgFound))
     cv2.waitKey(0)
 
 def squared_difference(input, target, i, j):
