@@ -6,8 +6,8 @@ def execute():
     target_img_path = "Img/t1-img2.png"
     threshold = 0.1
 
-    input_img = cv2.imread(input_img_path, cv2.COLOR_BGR2GRAY)
-    target_img = cv2.imread(target_img_path,cv2.COLOR_BGR2GRAY)
+    input_img = np.float64(cv2.imread(input_img_path, cv2.COLOR_BGR2GRAY))
+    target_img = np.float64(cv2.imread(target_img_path,cv2.COLOR_BGR2GRAY))
 
     Irows, Icols = input_img.shape[:2]
     Trows, Tcols = target_img.shape[:2]
@@ -26,7 +26,7 @@ def execute():
             pixel = matching_map_minimum(input_img, target_img, i, j)
             pixel_sum += pixel
 
-            mathcing_img[i, j] = pixel_sum / matching_map_maximum(input_img, target_img, Trows, Tcols, i, j)
+            matching_img[i, j] = pixel_sum / matching_map_maximum(input_img, target_img, Trows, Tcols, i, j)
 
             if matching_img[i, j] < threshold:
                 #detects when the value is less than the threshold (found taret image)
@@ -54,6 +54,9 @@ def matching_map_minimum(input, target, i, j):
 def matching_map_maximum(input, target, rows, cols, i, j):
     #calculates the maximum value of the matching map
     return np.sqrt(((target[i:i + rows, j:j + cols, 2]) ** 2).sum(axis=(0, 1)) - (((input[i:i + rows, j:j + cols, 2]) ** 2).sum(axis=(0, 1))))
+
+def normalize():
+    PATATA = 0
 
 if __name__ == '__main__':
     execute()
